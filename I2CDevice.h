@@ -2,6 +2,7 @@
 #define I2C_INCLUDED
 
 #include <stdint.h>
+#include "Macros.h"
 
 typedef struct
     {

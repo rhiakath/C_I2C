@@ -8,7 +8,6 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include <errno.h>
-#include "Macros.h"
 
 #ifdef LOGGER_SUPPORT
 #include <C_Logger/Logger.h>
