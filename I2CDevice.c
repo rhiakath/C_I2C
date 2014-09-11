@@ -81,8 +81,7 @@ int8_t I2CDevice_ProbeDevice ( SI2CDevice *In_Device )
 
 int8_t I2CDevice_WriteByte ( SI2CDevice *In_Device, uint8_t In_Data )
     {
-    int Result = i2c_smbus_write_byte ( In_Device->BusFileDescriptor, In_Data );
-    if ( Result != 0 )
+    if ( i2c_smbus_write_byte ( In_Device->BusFileDescriptor, In_Data ) != 0 )
         {
         LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
         return -1;
@@ -90,54 +89,68 @@ int8_t I2CDevice_WriteByte ( SI2CDevice *In_Device, uint8_t In_Data )
     return 0;
     }
 
-int8_t I2CDevice_WriteByteToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t In_Data )
+int8_t I2CDevice_ReadByte ( SI2CDevice *In_Device, uint8_t *Out_Data )
     {
-    int Result = i2c_smbus_write_byte_data ( In_Device->BusFileDescriptor, In_Address, In_Data );
-    if ( Result != 0 )
-        {
-        LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
-        return -1;
-        }
-    return 0;
-    }
-int8_t I2CDevice_ReadByteFromAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t *Out_Data )
-    {
-    int Result = i2c_smbus_read_byte_data ( In_Device->BusFileDescriptor, In_Address );
+    int Result = i2c_smbus_read_byte ( In_Device->BusFileDescriptor );
     if ( Result < 0 )
         {
-        LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
+        LOG_ERROR ( "Unable to read byte. \"%s\"", strerror ( errno ) );
         return -1;
         }
     *Out_Data = Result & 0xFF;
     return 0;
     }
+
+int8_t I2CDevice_WriteByteToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t In_Data )
+    {
+    if ( i2c_smbus_write_byte_data ( In_Device->BusFileDescriptor, In_Address, In_Data ) != 0 )
+        {
+        LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
+        return -1;
+        }
+    return 0;
+    }
+
+int8_t I2CDevice_ReadByteFromAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t *Out_Data )
+    {
+    int Result = i2c_smbus_read_byte_data ( In_Device->BusFileDescriptor, In_Address );
+    if ( Result < 0 )
+        {
+        LOG_ERROR ( "Unable to read byte. \"%s\"", strerror ( errno ) );
+        return -1;
+        }
+    *Out_Data = Result & 0xFF;
+    return 0;
+    }
+
 int8_t I2CDevice_WriteWordToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint16_t In_Data )
     {
-    int Result = i2c_smbus_write_word_data ( In_Device->BusFileDescriptor, In_Address, In_Data );
-    if ( Result != 0 )
+    if ( i2c_smbus_write_word_data ( In_Device->BusFileDescriptor, In_Address, In_Data ) != 0 )
         {
         LOG_ERROR ( "Unable to write word. \"%s\"", strerror ( errno ) );
         return -1;
         }
     return 0;
     }
+    
 int8_t I2CDevice_ReadWordFromAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint16_t* Out_Data )
     {
     int Result = i2c_smbus_read_word_data ( In_Device->BusFileDescriptor, In_Address );
     if ( Result < 0 )
         {
-        LOG_ERROR ( "Unable to write word. \"%s\"", strerror ( errno ) );
+        LOG_ERROR ( "Unable to read word. \"%s\"", strerror ( errno ) );
         return -1;
         }
     *Out_Data = Result & 0xFFFF;
     return 0;
     }
+
 int8_t I2CDevice_WriteDataToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t *In_Data, uint8_t In_Length )
     {
     int Result = i2c_smbus_write_i2c_block_data ( In_Device->BusFileDescriptor, In_Address, In_Length, In_Data );
     if ( Result != 0 )
         {
-        LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
+        LOG_ERROR ( "Unable to write data. \"%s\"", strerror ( errno ) );
         return -1;
         }
     return 0;
@@ -148,9 +161,10 @@ int8_t I2CDevice_ReadDataFromAddress ( SI2CDevice *In_Device, uint8_t In_Address
     int Result = i2c_smbus_read_i2c_block_data ( In_Device->BusFileDescriptor, In_Address, In_Length, Out_Data );
     if ( Result < 0 )
         {
-        LOG_ERROR ( "Unable to write byte. \"%s\"", strerror ( errno ) );
+        LOG_ERROR ( "Unable to read data. \"%s\"", strerror ( errno ) );
+        return -1;
         }
-    return ( Result == In_Length?0:-1 );
+    return 0;
     }
 
 

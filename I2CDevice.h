@@ -22,6 +22,7 @@ int8_t I2CDevice_SetSlaveDeviceAddress ( SI2CDevice *In_Device, uint8_t In_Devic
 int8_t I2CDevice_GetSlaveDeviceAddress ( SI2CDevice *In_Device );
 int8_t I2CDevice_ProbeDevice ( SI2CDevice *In_Device );
 int8_t I2CDevice_WriteByte ( SI2CDevice *In_Device, uint8_t In_Data );
+int8_t I2CDevice_ReadByte ( SI2CDevice *In_Device, uint8_t *Out_Data );
 int8_t I2CDevice_WriteByteToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t In_Data );
 int8_t I2CDevice_ReadByteFromAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint8_t *Out_Data );
 int8_t I2CDevice_WriteWordToAddress ( SI2CDevice *In_Device, uint8_t In_Address, uint16_t In_Data );
